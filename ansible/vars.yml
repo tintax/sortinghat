@@ -1,0 +1,21 @@
+---
+
+# os user account to own/manage the hat application
+user_name: hat
+user_password: $6$6w3soatjDyf.vUpi$DfwyxKLt7.J5EuQKuNzzc63kWBItizIsI9b98A2h3KMbUzoS6de9RXEFgocqxVN2Y3YQqL34C1WCZWjZMGXQe/
+user_group: hat
+user_groups:
+  - audio
+  - bluetooth
+  - i2c
+  - input
+  - gpio
+  - plugdev
+  - spi
+  - sudo
+  - users
+
+# application directories  
+app_dir: /opt/sortinghat
+app_src_dir: "{{ app_dir }}/src"
+app_venv_dir: "{{ app_dir }}/venv"

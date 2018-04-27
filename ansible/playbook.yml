@@ -1,0 +1,81 @@
+---
+
+- name: configure sortinghat raspberry pi
+  hosts: "{{ HOSTS }}"
+  become: true
+  vars_files:
+    - vars.yml
+  tasks:
+  
+  - name: ensure system dependencies are installed
+    apt:
+      name: "{{ item }}"
+      state: present
+      cache_valid_time: 3600
+    loop:
+      - acl  # protect ansible modules for unprivileged users
+      - python3-venv  # need ensurepip for venv ("bug")
+
+  - name: ensure os group exists
+    group:
+      name: "{{ user_group }}"
+      state: present
+      system: no
+      
+  - name: ensure os user exists
+    user:
+      name: "{{ user_name }}"
+      state: present
+      comment: "sorting hat software owner"
+      system: no
+      group: "{{ user_group }}"
+      groups: "{{ user_groups }}"
+      password: "{{ user_password }}"
+      update_password: always
+      
+  - name: ensure application directories exist
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: "{{ user_name }}"
+      group: "{{ user_group }}"
+      mode: "0775"
+    loop:
+      - "{{ app_dir }}"
+      - "{{ app_src_dir }}"
+      - "{{ app_venv_dir }}"
+      
+  - name: ensure source code is copied to pi
+    copy:
+      src: "../{{ item }}"
+      dest: "{{ app_src_dir }}"
+      owner: "{{ user_name }}"
+      group: "{{ user_group }}"
+    register: copy_code
+    loop:
+      - setup.py
+      - sortinghat.py
+      
+  - name: ensure virtualenv exists (with latest pip)
+    become_user: "{{ user_name }}"
+    pip:
+      name: pip
+      state: latest
+      virtualenv: "{{ app_venv_dir }}"
+      virtualenv_command: /usr/bin/python3 -m venv
+      virtualenv_site_packages: no
+    when: copy_code.changed
+      
+  - name: ensure sorting hat software is installed
+    become_user: "{{ user_name }}"
+    pip:
+      name: "{{ app_src_dir }}"
+      state: latest
+      virtualenv: "{{ app_venv_dir }}"
+    when: copy_code.changed
+      
+  - name: ensure sortinghat available on path
+    file:
+      path: /usr/local/bin/sortinghat
+      state: link
+      src: "{{ app_venv_dir }}/bin/sortinghat"
