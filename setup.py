@@ -10,6 +10,7 @@ setup(
     install_requires=(
         "click",
         "evdev",
+        "executor",
         "toml",
     ),
     entry_points = {

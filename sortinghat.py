@@ -3,6 +3,7 @@ from pathlib import Path
 
 import click
 import evdev
+import executor
 import toml
 
 
@@ -55,7 +56,12 @@ class SortingHat:
             logging.warning("tag '%s' not recognised", tag)
             return
             
-        click.echo(self.audio_dir / audio_filename)
+        command = [
+            "play",
+            str(self.audio_dir / audio_filename)
+            ]
+        logging.debug("run: %s", " ".join(command))
+        executor.execute(*command, silent=False)
 
 
 @click.command()
