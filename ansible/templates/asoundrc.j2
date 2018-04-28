@@ -1,0 +1,8 @@
+pcm.!default {
+  type plug
+  slave.pcm {
+    type bluealsa
+    device "{{ speaker_address }}"
+    profile "a2dp"
+  }
+}

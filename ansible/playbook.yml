@@ -34,6 +34,12 @@
       password: "{{ user_password }}"
       update_password: always
 
+  - name: ensure user has default ALSA audio device defined
+    become_user: "{{ user_name }}"
+    template:
+      src: templates/asoundrc.j2
+      dest: "~/.asoundrc"
+
   - name: fix bluetooth SAP error by disabling plugin (not needed)
     block:
       - file:
