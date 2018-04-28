@@ -1,7 +1,9 @@
 import logging
+from pathlib import Path
 
 import click
 import evdev
+import toml
 
 
 class Reader:
@@ -38,13 +40,36 @@ class Reader:
                         tag = tag + key.strip('KEY_')            
 
 
+class SortingHat:
+    """Controls the application logic."""
+
+    def __init__(self, tags, audio_dir):
+        self.tags = tags
+        self.audio_dir = Path(audio_dir)
+        
+    def sort(self, tag):
+        """Play sound for guest associated with supplied RFID tag.""" 
+    
+        audio_filename = self.tags["guests"].get(tag)
+        if not audio_filename:
+            logging.warning("tag '%s' not recognised", tag)
+            return
+            
+        click.echo(self.audio_dir / audio_filename)
+
+
 @click.command()
+@click.argument("tags", type=click.File("r"))
+@click.argument("audiofiles", type=click.Path(exists=True, file_okay=False))
 @click.option("--log-level", default="WARNING")
-def cli(log_level):
+def cli(tags, audiofiles, log_level):
     """Sorts wedding guests on to tables."""
     
     logging.basicConfig(level=log_level, format="%(message)s")
     
+    hat = SortingHat(toml.load(tags), audiofiles)
+    
     reader = Reader.find()
     for tag in reader.read_loop():
         logging.info("tag '%s' read", tag)
+        hat.sort(tag)

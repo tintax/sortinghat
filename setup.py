@@ -10,6 +10,7 @@ setup(
     install_requires=(
         "click",
         "evdev",
+        "toml",
     ),
     entry_points = {
         "console_scripts": [
