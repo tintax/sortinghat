@@ -16,6 +16,7 @@
       - acl  # protect ansible modules for unprivileged users
       - bluealsa  # solves "Failed to connect org.bluez.Error.Failed"
       - python3-venv  # need ensurepip for venv ("bug")
+      - sox  # play audiofiles from cli (including ogg)
 
   - name: ensure os group exists
     group:
