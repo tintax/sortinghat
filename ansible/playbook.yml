@@ -55,6 +55,13 @@
     loop:
       - setup.py
       - sortinghat.py
+
+  - name: ensure test data is copied to pi
+    copy:
+      src: "../testdata"
+      dest: "{{ app_dir }}"
+      owner: "{{ user_name }}"
+      group: "{{ user_group }}"
       
   - name: ensure virtualenv exists (with latest pip)
     become_user: "{{ user_name }}"
