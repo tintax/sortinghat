@@ -14,6 +14,7 @@
       cache_valid_time: 3600
     loop:
       - acl  # protect ansible modules for unprivileged users
+      - bluealsa  # solves "Failed to connect org.bluez.Error.Failed"
       - python3-venv  # need ensurepip for venv ("bug")
 
   - name: ensure os group exists
@@ -32,6 +33,34 @@
       groups: "{{ user_groups }}"
       password: "{{ user_password }}"
       update_password: always
+
+  - name: fix bluetooth SAP error by disabling plugin (not needed)
+    block:
+      - file:
+          path: /etc/systemd/system/bluetooth.service.d
+          state: directory
+          owner: root
+          group: root
+          mode: "0755"
+      - copy:
+          src: files/bluetooth.service.override.conf
+          dest: /etc/systemd/system/bluetooth.service.d/override.conf
+          owner: root
+          group: root
+          mode: "0644"
+        notify: reload systemd
+
+  - name: ensure bluetooth service is enabled and started
+    systemd:
+      name: bluetooth
+      enabled: yes
+      state: started
+
+  - name: ensure bluealsa service is enabled and started
+    systemd:
+      name: bluealsa
+      enabled: yes
+      state: started
       
   - name: ensure application directories exist
     file:
@@ -86,3 +115,8 @@
       path: /usr/local/bin/sortinghat
       state: link
       src: "{{ app_venv_dir }}/bin/sortinghat"
+      
+  handlers:
+    - name: reload systemd
+      systemd:
+        daemon_reload: yes 

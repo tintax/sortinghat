@@ -7,9 +7,9 @@ user_group: pi
 user_groups:
   - adm
   - audio
-  - bluetooth
+  - bluetooth   # access speaker
   - i2c
-  - input
+  - input       # access rfid reader
   - gpio
   - plugdev
   - spi
