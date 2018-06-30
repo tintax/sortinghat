@@ -1,0 +1,40 @@
+# configure wireless interface
+interface=wlan0
+driver=nl80211
+
+# set the network name which clients connect to
+ssid={{ wlan_ssid }}
+
+# enable IEEE 802.11n plus QoS for full HT support
+ieee80211n=1
+wmm_enabled=1
+
+# specify the band (2.4 GHz) for 802.11n -- supports 802.11g
+hw_mode=g
+
+# most consumer APs default to channel 6 so try 1 or 11
+channel=1
+
+# limit frequencies to those allowed in Great Britain
+ieee80211d=1
+country_code=GB
+
+# no need to filter MAC addresses (easily spoofed)
+macaddr_acl=0
+
+# just use open auth (exclude WEP)
+auth_algs=1
+
+# don't hide the broadcast the network name
+ignore_broadcast_ssid=0
+
+# just use WPA2 (exclude WPA1)
+wpa=2
+
+# network password
+wpa_passphrase={{ wlan_passphrase }}
+
+# configure key management and data encryption
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP

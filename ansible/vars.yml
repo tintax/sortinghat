@@ -23,3 +23,9 @@ app_venv_dir: "{{ app_dir }}/venv"
 
 # bluetooth speaker address
 speaker_address: FC:58:FA:15:49:6A
+
+# wireless access point -- standalone network
+wlan_pi_ip_address: 192.168.4.1/24
+wlan_client_range: 192.168.4.2,192.168.4.20,255.255.255.0,5m
+wlan_ssid: sortinghat
+wlan_passphrase: bobthebuilder

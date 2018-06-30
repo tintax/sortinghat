@@ -15,6 +15,8 @@
     loop:
       - acl  # protect ansible modules for unprivileged users
       - bluealsa  # solves "Failed to connect org.bluez.Error.Failed"
+      - dnsmasq  # DHCP server (hand out addresses to wireless clients)
+      - hostapd  # access point host software
       - python3-venv  # need ensurepip for venv ("bug")
       - sox  # play audiofiles from cli (including ogg)
 
@@ -68,6 +70,32 @@
       name: bluealsa
       enabled: yes
       state: started
+
+  - name: ensure DHCP client is configured (set WLAN to static IP)
+    template:
+      src: templates/dhcpcd.conf.j2
+      dest: /etc/dhcpcd.conf
+    notify: restart dhcpcd
+
+  - name: ensure DHCP server is configured (for WLAN)
+    template:
+      src: templates/dnsmasq.conf.j2
+      dest: /etc/dnsmasq.conf
+    notify: restart dnsmasq
+
+  - name: ensure host access point is configured (for WLAN)
+    template:
+      src: templates/hostapd.conf.j2
+      dest: /etc/hostapd/hostapd.conf
+    notify: restart hostapd
+
+  - name: ensure hostapd uses correct config file
+    lineinfile:
+      path: /etc/default/hostapd
+      regexp: '^DAEMON_CONF='
+      insertafter: '^#DAEMON_CONF='
+      line: 'DAEMON_CONF="/etc/hostapd/hostapd.conf"'
+    notify: restart hostapd
       
   - name: ensure application directories exist
     file:
@@ -126,4 +154,19 @@
   handlers:
     - name: reload systemd
       systemd:
-        daemon_reload: yes 
+        daemon_reload: yes
+        
+    - name: restart dhcpcd
+      systemd:
+        name: dhcpcd
+        state: restarted
+        
+    - name: restart dnsmasq
+      systemd:
+        name: dnsmasq
+        state: restarted
+        
+    - name: restart hostapd
+      systemd:
+        name: hostapd
+        state: restarted
