@@ -20,6 +20,7 @@ user_groups:
 app_dir: /opt/sortinghat
 app_src_dir: "{{ app_dir }}/src"
 app_venv_dir: "{{ app_dir }}/venv"
+app_var_dir: /var/opt/sortinghat
 
 # bluetooth speaker address
 speaker_address: FC:58:FA:15:49:6A

@@ -1,5 +1,7 @@
 audiofiles
 __pycache__
 .venv
+data
+!data/test
 *.egg-info
 *.pyc

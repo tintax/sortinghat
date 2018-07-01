@@ -108,6 +108,7 @@
       - "{{ app_dir }}"
       - "{{ app_src_dir }}"
       - "{{ app_venv_dir }}"
+      - "{{ app_var_dir }}"
       
   - name: ensure source code is copied to pi
     copy:
@@ -120,12 +121,24 @@
       - setup.py
       - sortinghat.py
 
-  - name: ensure test data is copied to pi
-    copy:
-      src: "../testdata"
-      dest: "{{ app_dir }}"
-      owner: "{{ user_name }}"
-      group: "{{ user_group }}"
+  - name: check if source repository contains variable data
+    become: false
+    local_action: stat path="../data"
+    register: datadir
+
+  - name: ensure variable data is copied to pi
+    become: false
+    synchronize:
+      src: "../data/"
+      dest: "{{ app_var_dir }}"
+    when: datadir.stat.exists
+      
+#    copy:
+#      src: "../data"
+#      dest: "{{ app_var_dir }}"
+#      owner: "{{ user_name }}"
+#      group: "{{ user_group }}"
+#    when: datadir.stat.exists
       
   - name: ensure virtualenv exists (with latest pip)
     become_user: "{{ user_name }}"
