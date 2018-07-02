@@ -58,6 +58,7 @@ class SortingHat:
             
         command = [
             "play",
+            "--guard",
             str(self.audio_dir / audio_filename)
             ]
         logging.debug("run: %s", " ".join(command))
