@@ -1,0 +1,12 @@
+[Unit]
+Description=Sorting Hat Service
+After=default.target
+
+[Service]
+User={{ user_name }}
+Group={{ user_group }}
+Type=idle
+ExecStart=/usr/local/bin/sortinghat {{ service_tags }} {{ service_audio }}
+
+[Install]
+WantedBy=default.target

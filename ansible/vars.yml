@@ -22,6 +22,10 @@ app_src_dir: "{{ app_dir }}/src"
 app_venv_dir: "{{ app_dir }}/venv"
 app_var_dir: /var/opt/sortinghat
 
+# service arguments
+service_tags: "{{ app_var_dir }}/test/tags.toml"
+service_audio: "{{ app_var_dir }}/test"
+
 # bluetooth speaker address
 speaker_address: FC:58:FA:15:49:6A
 

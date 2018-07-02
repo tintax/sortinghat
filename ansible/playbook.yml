@@ -17,6 +17,7 @@
       - bluealsa  # solves "Failed to connect org.bluez.Error.Failed"
       - dnsmasq  # DHCP server (hand out addresses to wireless clients)
       - hostapd  # access point host software
+      - libsox-fmt-mp3  # MP3 support
       - python3-venv  # need ensurepip for venv ("bug")
       - sox  # play audiofiles from cli (including ogg)
 
@@ -133,13 +134,6 @@
       dest: "{{ app_var_dir }}"
     when: datadir.stat.exists
       
-#    copy:
-#      src: "../data"
-#      dest: "{{ app_var_dir }}"
-#      owner: "{{ user_name }}"
-#      group: "{{ user_group }}"
-#    when: datadir.stat.exists
-      
   - name: ensure virtualenv exists (with latest pip)
     become_user: "{{ user_name }}"
     pip:
@@ -163,6 +157,23 @@
       path: /usr/local/bin/sortinghat
       state: link
       src: "{{ app_venv_dir }}/bin/sortinghat"
+
+  - name: ensure sortinghat service exists
+    template:
+      src: templates/sortinghat.service.j2
+      dest: /etc/systemd/system/sortinghat.service
+      owner: root
+      group: root
+      mode: "0644"
+    notify:
+      - reload systemd
+      - restart sortinghat
+
+  - name: ensure sortinghat service is enabled and started
+    systemd:
+      name: sortinghat
+      enabled: yes
+      state: started
       
   handlers:
     - name: reload systemd
@@ -182,4 +193,9 @@
     - name: restart hostapd
       systemd:
         name: hostapd
+        state: restarted
+        
+    - name: restart sortinghat
+      systemd:
+        name: sortinghat
         state: restarted
