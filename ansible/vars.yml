@@ -27,7 +27,7 @@ service_tags: "{{ app_var_dir }}/test/tags.toml"
 service_audio: "{{ app_var_dir }}/test"
 
 # bluetooth speaker address
-speaker_address: FC:58:FA:15:49:6A
+speaker_address: A4:77:58:03:AA:33  # anker soundcore
 
 # wireless access point -- standalone network
 wlan_pi_ip_address: 192.168.4.1/24
