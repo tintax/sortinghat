@@ -1,0 +1,9 @@
+alias cdshd='cd {{ app_var_dir }}'
+alias shs='sudo systemctl status sortinghat'
+alias shl='sudo journalctl -u sortinghat.service'
+alias shr='sudo systemctl restart sortinghat'
+alias shc="echo -e 'connect {{ speaker_address }}\nquit' | bluetoothctl"
+
+function shgt() {
+  echo "$1" > {{ app_var_dir }}/golden
+}
