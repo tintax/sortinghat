@@ -3,6 +3,7 @@ alias shs='sudo systemctl status sortinghat'
 alias shl='sudo journalctl -u sortinghat.service'
 alias shr='sudo systemctl restart sortinghat'
 alias shc="echo -e 'connect {{ speaker_address }}\nquit' | bluetoothctl"
+alias shh='sudo shutdown -h now'
 
 function shgt() {
   echo "$1" > {{ app_var_dir }}/golden
