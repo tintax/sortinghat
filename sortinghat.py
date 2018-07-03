@@ -56,6 +56,12 @@ class SortingHat:
             logging.warning("tag '%s' not recognised", tag)
             return
             
+        # TODO: this is horrible -- need to fix once wedding
+        # is over and I actually have some time
+        if audio_filename == 'golden':
+            with open("/var/opt/sortinghat/golden") as f:
+                audio_filename = f.read().splitlines()[0]
+            
         command = [
             "play",
             "--guard",
