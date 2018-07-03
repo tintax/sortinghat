@@ -23,8 +23,8 @@ app_venv_dir: "{{ app_dir }}/venv"
 app_var_dir: /var/opt/sortinghat
 
 # service arguments
-service_tags: "{{ app_var_dir }}/test/tags.toml"
-service_audio: "{{ app_var_dir }}/test"
+service_tags: "{{ app_var_dir }}/tags.toml"
+service_audio: "{{ app_var_dir }}/audio"
 
 # bluetooth speaker address
 speaker_address: A4:77:58:03:AA:33  # anker soundcore
